@@ -9,15 +9,14 @@ typedef struct BT_Node {
 	int data;
 	struct BT_Node* left;
 	struct BT_Node* right;
-
 }BT_Node;
 BT_Node* BST_Create_Node(int newData)
 {
-	BT_Node* newnode = (BT_Node*)malloc(sizeof(BT_Node));
-	newnode->data = newData;
-	newnode->left = NULL;
-	newnode->right = NULL;
-	return newnode;
+	BT_Node* newNode = (BT_Node*)malloc(sizeof(BT_Node));
+	newNode->data = newData;
+	newNode->left = NULL;
+	newNode->right = NULL;
+	return newNode;
 }
 void BST_Destroy_Node(BT_Node* node)
 {
@@ -28,10 +27,8 @@ void BST_Destroy_Node(BT_Node* node)
 int BST_Min(BT_Node* root)
 {
 	BT_Node* iter = root;
-
 	if (root == NULL)
 		exit(1);
-
 	while (iter->left != NULL)
 	{
 		iter = iter->left;
@@ -41,10 +38,8 @@ int BST_Min(BT_Node* root)
 int BST_Max(BT_Node* root)
 {
 	BT_Node* iter = root;
-
 	if (root == NULL)
 		exit(1);
-
 	while (iter->right != NULL)
 	{
 		iter = iter->right;
@@ -53,25 +48,23 @@ int BST_Max(BT_Node* root)
 }
 BT_Node* BST_Search(BT_Node* root, int target)
 {
-	BT_Node* iter = root;
-
 	if (root == NULL)
 		exit(1);
 
-	if (target == root->data)
+	if (root->data == target)
 		return root;
-
-	if (target < root->data)
-		return BST_Search(root->left, target);
-	else
+	
+	if (root->data < target)
 		return BST_Search(root->right, target);
+	else
+		return BST_Search(root->left, target);
 }
 void BST_Insert(BT_Node** root, int key)
 {
-	BT_Node* newnode = BST_Create_Node(key);
+	BT_Node* newNode = BST_Create_Node(key);
 
 	if (*root == NULL)
-		*root = newnode;
+		*root = newNode;
 
 	else
 	{
@@ -83,22 +76,15 @@ void BST_Insert(BT_Node** root, int key)
 			if (key == iter->data)
 				return;
 			if (iter->data < key)
-			{
 				iter = iter->right;
-			}
 			else
-			{
 				iter = iter->left;
-			}
 		}
-		if (key < parent->data)
-		{
-			parent->left = newnode;
-		}
+
+		if (parent->data < key)
+			parent->right = newNode;
 		else
-		{
-			parent->right = newnode;
-		}
+			parent->left = newNode;
 	}
 }
 void BST_Delete(BT_Node** root, int key)
@@ -110,14 +96,15 @@ void BST_Delete(BT_Node** root, int key)
 	while (iter != NULL && iter->data != key)
 	{
 		parent = iter;
-		if (key < iter->data)
-			iter = iter->left;
-		else
+
+		if (iter->data < key)
 			iter = iter->right;
+		else if (iter->data > key)
+			iter = iter->left;
 	}
 	if (iter == NULL)
 		return;
-
+	
 	BT_Node* delNode = iter;
 
 	// case 1: 단말 노드 삭제
@@ -133,12 +120,13 @@ void BST_Delete(BT_Node** root, int key)
 	else if (delNode->left == NULL || delNode->right == NULL)
 	{
 		BT_Node* child;
+
 		if (delNode->left == NULL)
 			child = delNode->right;
 		else
 			child = delNode->left;
 
-		if (parent->left = delNode)
+		if (parent->left == delNode)
 			parent->left = child;
 		else
 			parent->right = child;
@@ -151,8 +139,11 @@ void BST_Delete(BT_Node** root, int key)
 		BT_Node* pSuccessor = delNode;
 		while (successor->left != NULL)
 		{
-			pSuccessor = successor;
-			successor = successor->left;
+			if (successor->left != NULL)
+			{
+				pSuccessor = successor;
+				successor = successor->left;
+			}
 		}
 		delNode->data = successor->data;
 		if (pSuccessor->left == successor)
@@ -162,7 +153,7 @@ void BST_Delete(BT_Node** root, int key)
 		delNode = successor;
 	}
 
-	if (vRoot->right != *root)
+	if (*root != vRoot->right)
 		*root = vRoot->right;
 	BST_Destroy_Node(vRoot);
 	BST_Destroy_Node(delNode);

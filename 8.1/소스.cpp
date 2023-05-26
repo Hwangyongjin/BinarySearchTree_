@@ -2,7 +2,7 @@
  int main() {
 	BT_Node * root = NULL;
 	//이진    탐색    트리    구성
-	 BST_Insert(&root, 50);
+	BST_Insert(&root, 50);
 	BST_Insert(&root, 35);
 	BST_Insert(&root, 70);
 	BST_Insert(&root, 6);
@@ -18,6 +18,7 @@
 	printf("Search 36 node: %d \n", BST_Search(root, 36)->data);
 	//삭제    테스트
 	BST_Delete(&root, 35); //35, 38, 6, 50 노드 삭제 테스트 진행
+	BST_Delete(&root, 50);
 	BST_Insert(&root, 39);
 	BST_TreePrinter(root);
 	return 0;
